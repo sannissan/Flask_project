@@ -9,7 +9,7 @@ def hello_world():
 
 @app.route('/test')
 def hello_world():
-    return 'test world!'
+    return 'test 4!'
 
 if __name__ == '__main__':
     app.run()
