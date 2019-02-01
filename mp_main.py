@@ -1,13 +1,11 @@
 import mp_db
 import mp_requests
 import mp_flask
-from sqlalchemy.orm import sessionmaker
+from mp_db import Session
 
 
-
-
-Session = sessionmaker(bind=mp_db.engine)
-
+if __name__ == '__main__':
+    mp_flask.app.run()
 
 def add_catalog(_response):
 
@@ -15,7 +13,7 @@ def add_catalog(_response):
     for rw in _response:
         catalog = mp_db.Catalog(rw["Code"], rw["Name"], rw["Category"])
         session1.add(catalog)
-    #session1.commit()
+    session1.commit()
     print("commit")
 
 
@@ -34,9 +32,5 @@ add_catalog(response.get("Data"))
 result = mp_db.engine.execute("select * from Catalog")
 cat = result.fetchall()
 print("Товары", len(cat), "шт.")
-
-
-#for u in cat:
-#    print(u)
 
 

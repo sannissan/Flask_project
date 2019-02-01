@@ -1,4 +1,5 @@
 import requests
+import mp_db
 
 url_server = 'http://10.80.178.184/UT_dev5_'
 
@@ -24,7 +25,7 @@ def get_catalog_request_data():
 
 def get_category_request_data():
     return {
-            "Modified": True,
+            "Modified": False,
             "FilterID": [],
             "FilterName": []
             }
@@ -72,3 +73,31 @@ def get_order_status(_order_status_request_data):
         print("GetOrder: Error (status_code = %r)" % rsp.status_code)
     print(rsp.json())
     return rsp.json()
+
+
+def add_categories(count):
+    request_data = get_category_request_data()
+    response = get_category(request_data)
+    session1 = mp_db.Session()
+    for rw in response.get("Data"):
+        count -= 1
+        print(rw)
+        catalog = mp_db.Category(rw["Category"], rw["Level"])
+        session1.add(catalog)
+        if count == 1:
+            break
+    session1.commit()
+
+
+def add_catalog(count):
+    request_data = get_catalog_request_data()
+    response = get_catalog(request_data)
+    session1 = mp_db.Session()
+    for rw in response.get("Data"):
+        count -= 1
+        print(rw)
+        catalog = mp_db.Catalog(rw["Code"], rw["Name"], rw["Category"])
+        session1.add(catalog)
+        if count == 1:
+            break
+    session1.commit()

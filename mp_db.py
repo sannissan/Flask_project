@@ -1,13 +1,19 @@
 import sqlalchemy as sa
-import requests
-import json
 
-from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy.orm import mapper
 from sqlalchemy import Table, Column, Integer, String, MetaData
 from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.orm import sessionmaker
+
+
+
+ROLE_USER = 0
+ROLE_ADMIN = 1
 
 print("Версия SQLAlchemy:", sa.__version__)
 engine = sa.create_engine('sqlite:///maxipro.db', echo=False)
+
+Session = sessionmaker(bind=engine)
 
 if not database_exists(engine.url):
     print("Создана база данных")
@@ -16,10 +22,21 @@ if not database_exists(engine.url):
 
 def print_table(_session, _table):
     print()
-    print(_table,"-----------------------------------")
+    print(_table, "-----------------------------------")
     for instance in _session.query(_table).all():
         print(instance)
     print("------------------------------------------")
+
+
+class User(object):
+    def __init__(self, user_id, nickname, email, role):
+        self.user_id = user_id
+        self.nickname = nickname
+        self.email = email
+        self.role = role
+
+    def __repr__(self):
+        return '<User %s %s>' % (self.nickname, self.role)
 
 
 class Catalog(object):
@@ -33,30 +50,31 @@ class Catalog(object):
 
 
 class Category(object):
-    def __init__(self, id_category, category, level):
-        self.id_category = id_category
+    def __init__(self, category, level):
         self.category = category
         self.level = level
-        self.category = category
 
     def __repr__(self):
         return "<Category('%s','%s', '%s')>" % (self.id_category, self.category, self.level)
 
 
 metadata = MetaData()
-catalog_table = Table('catalog', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('code', String),
-    Column('name', String),
-    Column('id_category', String)
-)
-category_table = Table('Category', metadata,
-    Column('id_category', Integer, primary_key=True),
-    Column('code', String),
-    Column('name', String)
-)
+catalog_table = Table('catalog',
+                      metadata,
+                      Column('id', Integer, primary_key=True),
+                      Column('code', String),
+                      Column('name', String),
+                      Column('id_category', String))
+
+category_table = Table('category',
+                       metadata,
+                       Column('id', Integer, primary_key=True),
+                       Column('category', String),
+                       Column('level', String))
+
 metadata.create_all(engine)
 mapper(Catalog, catalog_table)
+mapper(Category, category_table)
 
 
 
