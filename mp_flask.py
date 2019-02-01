@@ -24,7 +24,7 @@ def list_table(table_name):
 @app.route('/getCategories')
 def get_categories():
     mp_requests.add_categories(10)
-    return list_table('Category')
+    return list_table('сategories')
 
 
 @app.route('/getCatalog')

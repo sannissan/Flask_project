@@ -66,7 +66,7 @@ catalog_table = Table('catalog',
                       Column('name', String),
                       Column('id_category', String))
 
-category_table = Table('category',
+category_table = Table('сategories',
                        metadata,
                        Column('id', Integer, primary_key=True),
                        Column('category', String),

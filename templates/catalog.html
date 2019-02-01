@@ -4,8 +4,10 @@
     </head>
     <body>
         <h1>Table: {{ table }}</h1>
+        <p>
         {% for post in posts %}
-        <div><p> {{ post }}</p></div>
+        <div> {{ post }}</div>
         {% endfor %}
+        </p>
     </body>
 </html>
